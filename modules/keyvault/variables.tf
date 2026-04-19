@@ -4,6 +4,7 @@ variable "keyvault_name" {
 
 variable "location" {
     type = string
+    default = "southindia"
 }
 variable "resource_group_name" {
     type = string

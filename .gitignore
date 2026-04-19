@@ -1,0 +1,38 @@
+# Terraform files
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# Sensitive files
+terraform.tfvars
+*.tfvars
+
+# Crash logs
+crash.log
+
+# CLI config
+.terraformrc
+terraform.rc
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+.terraform.lock.hcl
+
+# Secrets
+*.tfvars
+*.pem
+*.key
+*.pub
+
+
+var.sh
+
+dev.sh
+
+
+*.sh

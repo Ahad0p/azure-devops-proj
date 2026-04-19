@@ -1,6 +1,6 @@
 variable "location" {
   type = string
-  default = "Central India"
+  default = "southindia"
 }
  variable "resource_group_name" {}
 

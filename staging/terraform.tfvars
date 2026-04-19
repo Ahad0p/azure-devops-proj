@@ -1,0 +1,6 @@
+rgname                 = "stage-ahad-rg"
+service_principal_name = "stage-ahad-spn"
+keyvault_name          = "stage-ahad-kv-101"
+SUB_ID = "aad1f468-b451-4ae2-a5e8-dcda79dce8a0"
+node_pool_name = "stagenp"
+cluster_name = "stage-ahad-cluster"

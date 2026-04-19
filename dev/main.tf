@@ -33,7 +33,7 @@ resource "azurerm_key_vault_secret" "example" {
 module "aks" {
   source              = "../modules/aks/"
   service_principal_name = var.service_principal_name
-  kubernetes_version = "1.30.7"
+  kubernetes_version = ""
   client_id           = module.ServicePrincipal.client_id
   client_secret       = module.ServicePrincipal.client_secret
   location            = var.location

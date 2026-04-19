@@ -1,0 +1,6 @@
+rgname                 = "dev-ahad-rg"
+service_principal_name = "dev-ahad-spn"
+keyvault_name          = "dev-ahad-kv-101"
+SUB_ID = "aad1f468-b451-4ae2-a5e8-dcda79dce8a0"
+cluster_name = "dev-ahad-cluster"
+node_pool_name = "devnp"

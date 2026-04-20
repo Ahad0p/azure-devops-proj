@@ -1,14 +1,21 @@
-data "azurerm_client_config" "current" {}
+resource "random_id" "suffix" {
+  byte_length = 4
+}
 
-resource "azurerm_key_vault" "kv" {
-  name                       = var.keyvault_name
-  location                   = var.location
-  resource_group_name        = var.resource_group_name
-  enabled_for_disk_encryption = true
-  tenant_id                  = data.azurerm_client_config.current.tenant_id
-  purge_protection_enabled    = false
-  sku_name                   = "premium"
-  soft_delete_retention_days = 7
-  enable_rbac_authorization = true
- 
+resource "azurerm_key_vault" "vault" {
+  name                = "${var.keyvault_name}-${random_id.suffix.hex}"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  tenant_id           = var.tenant_id
+  sku_name            = "standard"
+
+  rbac_authorization_enabled = true
+}
+
+# Give AKS access to Key Vault (optional - pass from outside)
+resource "azurerm_role_assignment" "aks_kv_access" {
+  count               = var.aks_principal_id != "" ? 1 : 0
+  scope               = azurerm_key_vault.vault.id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id        = var.aks_principal_id
 }

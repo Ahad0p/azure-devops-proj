@@ -1,36 +1,31 @@
 variable "location" {
   type = string
-  default = "southindia"
 }
- variable "resource_group_name" {}
 
-variable "service_principal_name" {
+variable "resource_group_name" {
   type = string
 }
 
-variable "ssh_public_key" {
-  default = "C:/Users/abdul/.ssh/aks-key.pub"
-}
-
-variable "client_id" {}
-variable "client_secret" {
-  type = string
-  sensitive = true
-}
-
-variable "node_pool_name" {
-  
-}
 variable "cluster_name" {
-  
+  type = string
 }
 
-variable "kubernetes_version" {
-  type=string
+variable "dns_prefix" {
+  type = string
+  default = "aksmanaged"
 }
 
-variable "admin_username" {
-  description = "Admin username for AKS node VMs"
-  type        = string
-  default     = "ubuntu"
+variable "node_count" {
+  type    = number
+  default = 1   # 💸 cost safe
+}
+
+variable "vm_size" {
+  type    = string
+  default = "Standard_B2s"  # 💸 cheaper
+}
+
+variable "environment" {
+  type    = string
+  default = "dev"
 }

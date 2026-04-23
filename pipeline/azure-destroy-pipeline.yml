@@ -1,0 +1,103 @@
+trigger: none
+
+parameters:
+  - name: environment
+    type: string
+    values:
+      - dev
+      - staging
+    default: dev
+
+stages:
+  - stage: Plan_Destroy
+    jobs:
+      - job: terraform_plan_destroy
+        pool:
+          name: default
+        steps:
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: "1.5.7"
+
+          - task: TerraformTask@5
+            displayName: "Init DEV"
+            condition: eq('${{ parameters.environment }}', 'dev')
+            inputs:
+              provider: "azurerm"
+              command: "init"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/dev"
+              backendServiceArm: ""
+              backendAzureRmResourceGroupName: "terraform-state-rg"
+              backendAzureRmStorageAccountName: "tfdevbackendabdul"
+              backendAzureRmContainerName: "tfstate"
+              backendAzureRmKey: "dev.tfstate"
+
+          - task: TerraformTask@5
+            displayName: "Init STAGING"
+            condition: eq('${{ parameters.environment }}', 'staging')
+            inputs:
+              provider: "azurerm"
+              command: "init"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/staging"
+              backendServiceArm: ""
+              backendAzureRmResourceGroupName: "terraform-state-rg"
+              backendAzureRmStorageAccountName: "tfstagebackendabdul"
+              backendAzureRmContainerName: "tfstate"
+              backendAzureRmKey: "stage.tfstate"
+
+          - task: TerraformTask@5
+            displayName: "Plan Destroy"
+            inputs:
+              provider: "azurerm"
+              command: "plan"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/${{ parameters.environment }}"
+              commandOptions: "-destroy -var-file=terraform.tfvars"
+              environmentServiceNameAzureRM: ""
+
+  - stage: Destroy
+    dependsOn: Plan_Destroy
+    condition: succeeded()
+
+    jobs:
+      - job: terraform_destroy
+        pool:
+          name: default
+        steps:
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: "1.5.7"
+
+          - task: TerraformTask@5
+            displayName: "Init DEV"
+            condition: eq('${{ parameters.environment }}', 'dev')
+            inputs:
+              provider: "azurerm"
+              command: "init"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/dev"
+              backendServiceArm: ""
+              backendAzureRmResourceGroupName: "terraform-state-rg"
+              backendAzureRmStorageAccountName: "tfdevbackendabdul"
+              backendAzureRmContainerName: "tfstate"
+              backendAzureRmKey: "dev.tfstate"
+
+          - task: TerraformTask@5
+            displayName: "Init STAGING"
+            condition: eq('${{ parameters.environment }}', 'staging')
+            inputs:
+              provider: "azurerm"
+              command: "init"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/staging"
+              backendServiceArm: ""
+              backendAzureRmResourceGroupName: "terraform-state-rg"
+              backendAzureRmStorageAccountName: "tfstagebackendabdul"
+              backendAzureRmContainerName: "tfstate"
+              backendAzureRmKey: "stage.tfstate"
+
+          - task: TerraformTask@5
+            displayName: "Destroy"
+            inputs:
+              provider: "azurerm"
+              command: "destroy"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/${{ parameters.environment }}"
+              commandOptions: "-var-file=terraform.tfvars --auto-approve"
+              environmentServiceNameAzureRM: ""
